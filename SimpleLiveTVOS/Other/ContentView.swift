@@ -30,8 +30,22 @@ struct ContentView: View {
         
         @Bindable var contentVM = appViewModel
         
+
+        let selectionChange: Binding<Int> = .init {
+            contentVM.selection
+        } set: { newValue in
+            contentVM.selection = newValue
+
+            switch newValue {
+            case 0:
+                favoriteLiveViewModel.getRoomList(index: -1)
+            default:
+                return
+            }
+        }
+
         NavigationView {
-            TabView(selection:$contentVM.selection) {
+            TabView(selection: selectionChange) {
                 FavoriteMainView()
                     .tabItem {
                         if appViewModel.favoriteStateModel.isLoading == true || appViewModel.favoriteStateModel.cloudKitReady == false {
